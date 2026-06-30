@@ -1,5 +1,7 @@
 {
   "name": "portfolio-app/vercel-deploy",
   "description": "Portfolio PHP app - minimal composer manifest for Vercel",
-  "require": {}
+  "require": {
+    "php": "^8.0"
+  }
 }
