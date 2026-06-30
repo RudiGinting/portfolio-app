@@ -5,6 +5,7 @@ This file explains the minimal steps to deploy this PHP + MySQL portfolio app to
 ---
 
 ## Summary (recommended)
+
 - Use Vercel for PHP hosting (server runtime via `@vercel/php`).
 - Use PlanetScale (or another managed MySQL DB) as the database — Vercel does not host MySQL.
 - Export your local DB and import into the remote DB (or recreate schema via `config/database.php`).
@@ -14,6 +15,7 @@ This file explains the minimal steps to deploy this PHP + MySQL portfolio app to
 ---
 
 ## Prerequisites
+
 - GitHub repo with your project.
 - Vercel account.
 - PlanetScale account (or other managed MySQL: ClearDB, Neon, Amazon RDS, etc.).
@@ -22,16 +24,19 @@ This file explains the minimal steps to deploy this PHP + MySQL portfolio app to
 ---
 
 ## 1) PlanetScale: create database
+
 1. Create a new database in PlanetScale dashboard.
 2. Create a password (Service Password) or use the recommended connection method. Note that PlanetScale often requires using `pscale connect` as a secure tunnel for local imports — check PlanetScale docs for importing data (they provide `pscale` CLI instructions).
 
 Important: If you cannot connect directly from Vercel to PlanetScale using simple host/user/password, you can:
+
 - Use PlanetScale's recommended connection string and create a database user/password in the dashboard.
 - Or use another managed MySQL provider that exposes a standard host/port/username/password.
 
 ---
 
 ## 2) Export local DB
+
 Run locally in your project machine (replace MySQL credentials as needed):
 
 ```bash
@@ -43,6 +48,7 @@ If `mysqldump` is not available, you can export via phpMyAdmin or MySQL Workbenc
 ---
 
 ## 3) Import data into remote DB
+
 If your provider supports direct import with `mysql` client:
 
 ```bash
@@ -60,7 +66,9 @@ mysql -h 127.0.0.1 -P 3306 -u <user> -p <DB_NAME> < portfolio_dump.sql
 ---
 
 ## 4) Set environment variables in Vercel
+
 In Vercel project → Settings → Environment Variables add:
+
 - `DB_HOST` — host provided by DB provider (for PlanetScale it might be a host like `aws.connect.psdb.cloud` or `127.0.0.1` when using `pscale connect` locally)
 - `DB_USER`
 - `DB_PASS`
@@ -71,6 +79,7 @@ Note: `config/database.php` in this repo already reads `DB_HOST`, `DB_USER`, `DB
 ---
 
 ## 5) Upload repository to GitHub and deploy on Vercel
+
 1. Push your project to GitHub.
 2. In Vercel, `New Project` → Import from GitHub → choose repo → Deploy.
 3. Vercel will use `vercel.json` and the `@vercel/php` builder. After deployment, your site will be available at `https://<project>.vercel.app`.
@@ -78,12 +87,14 @@ Note: `config/database.php` in this repo already reads `DB_HOST`, `DB_USER`, `DB
 ---
 
 ## 6) Verify and test
+
 - Open `https://<project>.vercel.app/resume.php` to check public resume rendering.
 - Open `https://<project>.vercel.app/admin/login.php` to login (default admin `admin` / `admin123` — change password!).
 
 ---
 
 ## 7) Important runtime notes
+
 - Vercel filesystem is ephemeral — any file uploads to local `uploads/` folder will not persist across deployments/restarts. Use external storage for media:
   - Cloudinary (easy image hosting), or
   - AWS S3 / DigitalOcean Spaces.
@@ -93,6 +104,7 @@ Note: `config/database.php` in this repo already reads `DB_HOST`, `DB_USER`, `DB
 ---
 
 ## Checklist (quick)
+
 - [ ] Create GitHub repo and push project.
 - [ ] Create PlanetScale (or other) database and note credentials.
 - [ ] Export local DB (`portfolio_dump.sql`).
@@ -105,6 +117,7 @@ Note: `config/database.php` in this repo already reads `DB_HOST`, `DB_USER`, `DB
 ---
 
 ## Troubleshooting tips
+
 - If the app shows DB connection errors: verify env vars, DB host reachability, and user/password correctness.
 - For PlanetScale connection issues: use `pscale connect` for secure tunnelling, or follow PlanetScale’s DB password creation docs.
 - To debug on Vercel: use Vercel build logs and the `vercel` CLI for local testing.
@@ -112,6 +125,7 @@ Note: `config/database.php` in this repo already reads `DB_HOST`, `DB_USER`, `DB
 ---
 
 If you want, I can now:
+
 - generate the `portfolio_dump.sql` locally (if mysqldump is available here) and prepare a zip of the project; OR
 - create a short `README.md` file in the repo root linking to this guide and summarizing the two-step flow (deploy + import).
 
