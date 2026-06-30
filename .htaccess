@@ -1,0 +1,23 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /portfolio-app/
+    
+    # Prevent direct access to config files
+    RewriteRule ^config/ - [F]
+    
+    # Prevent directory listing
+    Options -Indexes
+</IfModule>
+
+# Prevent access to sensitive files
+<FilesMatch "\.(env|json|lock|md)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Set proper headers
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set X-XSS-Protection "1; mode=block"
+</IfModule>
